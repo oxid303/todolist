@@ -1,18 +1,17 @@
 import React from 'react';
-import uniqueId from 'lodash/uniqueId';
 import NotesContext from './contexts/notes';
 import Form from './form';
 import List from './list';
+import uniqueId from 'lodash/uniqueId';
+
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import theme from '../styles/theme';
+import styles from '../styles';
+
 
 export default () => {
 
-  const note = {
-    id: uniqueId(),
-    status: false,
-    text: 'qwerty'
-  }
-
-  const [notes, setNotes] = React.useState([note]);
+  const [notes, setNotes] = React.useState([]);
 
   const append = ({ text }) => {
     notes.push({
@@ -43,16 +42,27 @@ export default () => {
   };
 
   return (
-    <NotesContext.Provider value={{
-      notes,
-      setNotes,
-      append,
-      update,
-      updateStatus,
-      remove,
-    }}>
-      <Form />
-      <List />
-    </NotesContext.Provider>
+    <div style={styles.wrapper}>
+      <div style={styles.wrapperGrid}>
+        <div style={styles.grid92}>
+          <MuiThemeProvider theme={theme}>
+            <NotesContext.Provider value={{
+              notes,
+              setNotes,
+              append,
+              update,
+              updateStatus,
+              remove,
+            }}>
+              <div style={styles.wrapperForm}><Form /></div>
+
+              {notes.length !== 0 &&
+                <div style={styles.wrapperList}><List /></div>}
+
+            </NotesContext.Provider>
+          </MuiThemeProvider>
+        </div>
+      </div>
+    </div>
   )
 }
