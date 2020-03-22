@@ -1,11 +1,12 @@
 import React from 'react';
 import { Button, Tooltip } from '@material-ui/core';
 
-const MuiTooltip = ({ children, tooltip }) => {
-  return tooltip ?
+const MuiTooltip = ({ children, tooltip, disabled }) => {
+  return tooltip && !disabled ?
     <Tooltip title={tooltip} enterDelay={700} arrow>{children}</Tooltip> :
     <span>{children}</span>
 };
+
 
 export default ({
   children,
@@ -16,7 +17,7 @@ export default ({
   tooltip,
 }) => {
   return (
-    <MuiTooltip tooltip={tooltip}>
+    <MuiTooltip tooltip={tooltip} disabled={disabled}>
 
       <Button
         variant="contained"

@@ -1,38 +1,30 @@
 import React from 'react';
-import NotesContext from '../contexts/notes';
-import Button from '../button';
-import TextField from './textfield';
+import { Form } from 'react-final-form';
 import noop from 'lodash/noop';
-
-import { Form, Field } from 'react-final-form';
-import { composeValidators } from '../../utils/validators';
-import { required, minLength, maxLength } from '../../utils/validators';
-
-import { Grid } from '@material-ui/core';
-import { IconClear } from '../../assets/icons';
-import { IconAppend } from '../../assets/icons';
-import { IconStatus } from '../../assets/icons';
-import { IconCancel } from '../../assets/icons';
-import { IconSave } from '../../assets/icons';
-import { IconRemove } from '../../assets/icons';
+import NotesContext from '../contexts/notes';
+import Layout from './layout';
+import {
+  composeValidators,
+  required,
+  minLength,
+  maxLength
+} from '../../utils/validators';
 
 
 export default ({ note = {}, isEdit = false, unmount = noop }) => {
 
-  const { append, update, remove } = React.useContext(NotesContext);
+  const { append, update } = React.useContext(NotesContext);
 
   const minLength5 = minLength(5);
   const maxLength250 = maxLength(250);
-  const fieldValidate = composeValidators(required, minLength5, maxLength250);
+
+  const validators = composeValidators(required, minLength5, maxLength250);
 
   const statusColor = note.status ? 'darkgreen' : 'grey';
-  const label = isEdit ? 'change note' : 'add note';
-  const placeholder = isEdit ? 'what changed?' : 'what\'s new?';
   const text = 'text';
 
   const onSubmit = (note) => {
-    note.text = note.text.replace(/^\s+|\s+$/g, '');
-    note.text = note.text.replace(/\s+/g, ' ');
+    note.text = note.text.trim().replace(/\s+/g, ' ');
 
     const action = isEdit ? update : append;
     action(note);
@@ -52,6 +44,7 @@ export default ({ note = {}, isEdit = false, unmount = noop }) => {
     };
   }, [onPressEsc]);
 
+
   return (
     <Form
       onSubmit={onSubmit}
@@ -69,61 +62,16 @@ export default ({ note = {}, isEdit = false, unmount = noop }) => {
             }
           }}>
 
-          <Grid
-            container
-            direction="row"
-            justify="flex-start"
-            alignItems="flex-start">
+          <Layout
+            form={form}
+            pristine={pristine}
+            statusColor={statusColor}
+            text={text}
+            isEdit={isEdit}
+            fieldValidate={validators}
+            unmount={unmount}
+          />
 
-            {!isEdit &&
-              <Button
-                disabled={pristine}
-                onClick={form.reset}
-                tooltip={pristine ? false : "clear"}
-              >
-                <IconClear color={pristine ? 'grey' : 'black'} />
-              </Button>}
-
-            {isEdit &&
-              <Button disabled><IconStatus color={statusColor} /></Button>}
-
-            <Field
-              name={text}
-              component="input"
-              type="text"
-              validate={fieldValidate}
-            >
-              {input => (
-                <TextField
-                  {...input}
-                  isEdit={isEdit}
-                  label={label}
-                  placeholder={placeholder}
-                />
-              )}
-            </Field>
-
-            {!isEdit &&
-              <Button type="submit" tooltip="add note"><IconAppend /></Button>}
-
-            {isEdit &&
-              <span>
-                <Button
-                  color={pristine ? "primary" : "secondary"}
-                  onClick={unmount}
-                  tooltip={pristine ? "cancel" : "cancel changes"}
-                ><IconCancel /></Button>
-
-                <Button type="submit" tooltip="save"><IconSave /></Button>
-
-                <Button
-                  color="secondary"
-                  onClick={() => remove(note)}
-                  disabled
-                ><IconRemove color="grey" /></Button>
-              </span>
-            }
-          </Grid>
         </form>
       )}
     />

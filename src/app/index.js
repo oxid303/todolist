@@ -1,68 +1,41 @@
 import React from 'react';
-import NotesContext from './contexts/notes';
-import Form from './form';
-import List from './list';
-import uniqueId from 'lodash/uniqueId';
-
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import theme from '../styles/theme';
-import styles from '../styles';
+import { withRouter, Route, Redirect } from 'react-router-dom';
+import DayContext from './contexts/day';
+import UI from './ui';
 
 
-export default () => {
+export default withRouter(({ location }) => {
 
-  const [notes, setNotes] = React.useState([]);
+  const [day, setDay] = React.useState(new Date());
 
-  const append = ({ text }) => {
-    notes.push({
-      id: uniqueId(),
-      status: false,
-      text: text,
-    });
-    setNotes([...notes]);
-  };
+  const dateToString = (day) =>
+    `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
 
-  const update = ({ id, text }) => {
-    const modNotes = notes.map(note => (
-      note.id === id ? { ...note, text } : note
-    ));
-    setNotes([...modNotes]);
-  };
+  const [date, setDate] = React.useState(dateToString(day));
 
-  const updateStatus = ({ id }) => {
-    const modNotes = notes.map(note => (
-      note.id === id ? { ...note, status: !note.status } : note
-    ));
-    setNotes([...modNotes]);
-  };
+  const url = location.pathname.substring(1);
 
-  const remove = ({ id }) => {
-    const modNotes = notes.filter(note => note.id !== id);
-    setNotes([...modNotes]);
-  };
+  const isValidDateUrl = (url) => dateToString(new Date(url)) === url;
+
+  if (url !== date && isValidDateUrl(url)) {
+    const changedDay = new Date(url);
+    const changedDayString = dateToString(changedDay);
+
+    setDay(changedDay);
+    setDate(changedDayString);
+    return <Redirect to={`/${changedDayString}`} />
+
+  } else if (url !== date) {
+    return <Redirect to={`/${date}`} />
+  }
 
   return (
-    <div style={styles.wrapper}>
-      <div style={styles.wrapperGrid}>
-        <div style={styles.grid92}>
-          <MuiThemeProvider theme={theme}>
-            <NotesContext.Provider value={{
-              notes,
-              setNotes,
-              append,
-              update,
-              updateStatus,
-              remove,
-            }}>
-              <div style={styles.wrapperForm}><Form /></div>
-
-              {notes.length !== 0 &&
-                <div style={styles.wrapperList}><List /></div>}
-
-            </NotesContext.Provider>
-          </MuiThemeProvider>
-        </div>
-      </div>
-    </div>
+    <DayContext.Provider value={{
+      day,
+      setDay,
+      dateToString,
+    }}>
+      <Route path={`/${date}`} render={() => <UI date={date} />} />
+    </DayContext.Provider>
   )
-}
+})

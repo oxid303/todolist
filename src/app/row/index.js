@@ -1,8 +1,7 @@
 import React from 'react';
+import { Grid, Typography } from '@material-ui/core';
 import NotesContext from '../contexts/notes';
 import Button from '../button';
-
-import { Grid, Typography } from '@material-ui/core';
 import { IconEdit, IconRemove, IconStatus } from '../../assets/icons';
 import styles from '../../styles';
 

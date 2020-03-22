@@ -16,6 +16,8 @@ export default ({
       autoFocus
       onFocus={e => isEdit && e.target.select()}
 
+      autoComplete="off"
+
       name={name}
       placeholder={placeholder}
       style={styles.buildTextField(isEdit)}

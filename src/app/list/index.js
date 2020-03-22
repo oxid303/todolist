@@ -4,16 +4,33 @@ import Form from '../form';
 import Row from '../row';
 import styles from '../../styles';
 
+
 export default () => {
 
   const { notes } = React.useContext(NotesContext);
 
   const [editId, setEditId] = React.useState(null);
 
+  let timeOutId = null;
+
+  const onBlurHandler = () => {
+    timeOutId = setTimeout(() => {
+      setEditId(null);
+    });
+  };
+
+  const onFocusHandler = () => {
+    clearTimeout(timeOutId);
+  };
+
   let previousForm = false;
 
   return (
-    <div style={styles.grid52}>
+    <div
+      onFocus={onFocusHandler}
+      onBlur={onBlurHandler}
+      style={styles.grid52}
+    >
 
       {notes.map((note, index) => {
 

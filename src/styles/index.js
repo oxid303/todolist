@@ -19,11 +19,14 @@ export default {
     justifyItems: 'left',
     gridAutoRows: 'minmax(92px, auto)',
   },
-  wrapperForm: {
+  wrapperFormAndCalendar: {
+    display: 'grid',
+    gridTemplateColumns: 'auto auto',
     backgroundColor: '#fff',
-    padding: '25px 94px 5px 30px',
+    padding: '25px 30px 0 30px',
     borderRadius: 5,
     border: '1px solid #bbb',
+    boxShadow: '1px 1px 5px #9e9e9ee0',
   },
   wrapperList: {
     marginTop: 20,
@@ -31,6 +34,7 @@ export default {
     padding: '25px 30px 5px 30px',
     borderRadius: 5,
     border: '1px solid #bbb',
+    boxShadow: '1px 1px 5px #9e9e9ee0',
   },
   topLine: {
     position: 'relative',
@@ -89,6 +93,33 @@ export default {
         padding: '0 10px 7px 10px',
       },
   ),
+
+  buildCalendar: isShow => ({
+    display: isShow ? 'block' : 'none',
+    position: 'absolute',
+    zIndex: 1,
+    top: 95,
+    left: 'calc(((100vw - 100%) / 2) + 50% + 50px)',
+    backgroundImage: 'linear-gradient(to bottom, #fff 70%, #d2e9f5)',
+    border: 'solid 1px grey',
+    borderRadius: 5,
+    boxShadow: '3px 3px 7px grey',
+  }),
+
+  hiddenOverflow: () => document.body.style.overflow = 'hidden',
+  autoOverflow: () => document.body.style.overflow = 'auto',
+
+  buildModal: (isShow) => ({
+    display: isShow ? 'block' : 'none',
+    position: 'fixed',
+    zIndex: 1,
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
+    // backgroundColor: '#ffffff00', /* Fallback color */
+    backgroundColor: '#aaaaaabb', /* Black w/ opacity */
+  }),
 
   // buildColorSVG: ({ disabled, status }) => {
   //   return status ?
