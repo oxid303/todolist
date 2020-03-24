@@ -3,6 +3,8 @@ import { Form } from 'react-final-form';
 import noop from 'lodash/noop';
 import NotesContext from '../contexts/notes';
 import Layout from './layout';
+
+import cutSpaces from '../../utils/cut-spaces';
 import {
   composeValidators,
   required,
@@ -24,7 +26,7 @@ export default ({ note = {}, isEdit = false, unmount = noop }) => {
   const text = 'text';
 
   const onSubmit = (note) => {
-    note.text = note.text.trim().replace(/\s+/g, ' ');
+    note.text = cutSpaces(note.text);
 
     const action = isEdit ? update : append;
     action(note);

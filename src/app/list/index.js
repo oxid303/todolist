@@ -2,43 +2,38 @@ import React from 'react';
 import NotesContext from '../contexts/notes';
 import Form from '../form';
 import Row from '../row';
+
+import onFocusBlur from '../../utils/on-focus-blur';
 import styles from '../../styles';
 
 
 export default () => {
 
-  const { notes } = React.useContext(NotesContext);
+  const { currNotes } = React.useContext(NotesContext);
 
   const [editId, setEditId] = React.useState(null);
 
-  let timeOutId = null;
+  const onBlurCallback = () => setEditId(null);
 
-  const onBlurHandler = () => {
-    timeOutId = setTimeout(() => {
-      setEditId(null);
-    });
-  };
-
-  const onFocusHandler = () => {
-    clearTimeout(timeOutId);
-  };
+  const handleFocusBlur = onFocusBlur(onBlurCallback);
 
   let previousForm = false;
 
   return (
-    <div
-      onFocus={onFocusHandler}
-      onBlur={onBlurHandler}
-      style={styles.grid52}
-    >
+    <div style={styles.buildVerticalGridItems(52)}>
 
-      {notes.map((note, index) => {
+      {currNotes.map((note, index) => {
 
         if (note.id === editId) {
           previousForm = true;
 
           return (
-            <div key={note.id} style={styles.buildPaddingTop(1)}>
+            <div
+              key={note.id}
+              style={styles.buildPaddingTop(1)}
+              onFocus={handleFocusBlur.onFocus}
+              onBlur={handleFocusBlur.onBlur}
+            >
               <Form
                 key={note.id}
                 isEdit={true}

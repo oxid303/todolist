@@ -4,53 +4,42 @@ import NotesContext from '../contexts/notes';
 import Form from '../form';
 import List from '../list';
 import Calendar from '../calendar';
-import theme from '../../styles/theme';
+
+import localStorageNotes from '../../utils/local-storage-notes';
+import getObjKeysNames from '../../utils/get-obj-keys-names';
+import addToNewObj from '../../utils/add-to-new-obj';
+import nextIdInArrayObjects from '../../utils/next-id-in-array-objects';
+import muiTheme from '../../styles/mui-theme';
 import styles from '../../styles';
 
 
-export default ({date}) => {
+export default ({ date }) => {
 
-  const [storageNotes, setStorageNotes] = React.useState(
-    JSON.parse(localStorage.notes || '""') || {}
-  );
+  const [notes, setNotes] = React.useState(localStorageNotes.get());
 
-  const datesNotes = [];
+  const currNotes = notes[date] || [];
 
-  for (const date in storageNotes) {
-    datesNotes.push(date);
-  }
+  const setCurrNotes = (currNotes) => {
+    const modifiedNotes = addToNewObj(notes, date, currNotes);
 
-  const notes = storageNotes[date] || [];
-
-  const setNotes = (notes) => {
-    const modifiedNotes = {
-      ...storageNotes,
-      [date]: notes,
-    };
-
-    if (!notes.length) delete modifiedNotes[date];
-
-    localStorage.notes = JSON.stringify(modifiedNotes);
-    setStorageNotes(modifiedNotes);
+    localStorageNotes.set(modifiedNotes);
+    setNotes(modifiedNotes);
   };
 
+  const dates = getObjKeysNames(notes);
 
   const append = ({ text }) => {
-    const id = notes.length ?
-      notes[notes.length - 1].id + 1 :
-      1;
-
-    notes.push({
-      id,
+    currNotes.push({
+      id: nextIdInArrayObjects(currNotes),
       status: false,
       text: text,
     });
-    setNotes(notes);
+    setCurrNotes(currNotes);
   };
 
   const update = ({ id, text }) => {
-    setNotes(
-      notes.map(note => note.id === id ?
+    setCurrNotes(
+      currNotes.map(note => note.id === id ?
         { ...note, text } :
         note
       )
@@ -58,8 +47,8 @@ export default ({date}) => {
   };
 
   const updateStatus = ({ id }) => {
-    setNotes(
-      notes.map(note => note.id === id ?
+    setCurrNotes(
+      currNotes.map(note => note.id === id ?
         { ...note, status: !note.status } :
         note
       )
@@ -67,37 +56,38 @@ export default ({date}) => {
   };
 
   const remove = ({ id }) => {
-    setNotes(
-      notes.filter(note => note.id !== id)
+    setCurrNotes(
+      currNotes.filter(note => note.id !== id)
     );
   };
 
   return (
-    <div style={styles.wrapper}>
-      <div style={styles.wrapperGrid}>
-        <div style={styles.grid92}>
-          <MuiThemeProvider theme={theme}>
-            <NotesContext.Provider value={{
-              notes,
-              setNotes,
-              append,
-              update,
-              updateStatus,
-              remove,
-              datesNotes,
-            }}>
-              <div style={styles.wrapperFormAndCalendar}>
+    <MuiThemeProvider theme={muiTheme}>
+      <NotesContext.Provider value={{
+        currNotes,
+        setCurrNotes,
+        append,
+        update,
+        updateStatus,
+        remove,
+        dates,
+      }}>
+        <div style={styles.wrapper}>
+          <div style={styles.wrapperGrid}>
+            <div style={styles.buildVerticalGridItems(92)}>
+
+              <div style={styles.gridFormAndCalendar}>
                 <Form />
                 <Calendar />
               </div>
 
-              {notes.length !== 0 &&
+              {currNotes.length !== 0 &&
                 <div style={styles.wrapperList}><List /></div>}
 
-            </NotesContext.Provider>
-          </MuiThemeProvider>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </NotesContext.Provider>
+    </MuiThemeProvider>
   )
 }

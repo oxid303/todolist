@@ -1,5 +1,4 @@
-const cutSpaces = (str) =>
-  str.trim().replace(/\s+/g, ' ');
+import cutSpaces from '../cut-spaces';
 
 export const composeValidators = (...validators) => value =>
   validators.reduce((error, validator) => error || validator(value), undefined);

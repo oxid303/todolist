@@ -1,7 +1,9 @@
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import NotesContext from '../contexts/notes';
 import Button from '../button';
+
+import isSameMouseDownAndUp from '../../utils/is-same-mouse-down-and-up';
 import { IconEdit, IconRemove, IconStatus } from '../../assets/icons';
 import styles from '../../styles';
 
@@ -13,29 +15,15 @@ export default ({ note, setEditId }) => {
 
   const [isHidden, setIsHidden] = React.useState(true);
 
-  const handleEvent = ((xDown = 0, yDown = 0, xUp = 0, yUp = 0) => (e) => {
+  const isSameMouse = isSameMouseDownAndUp();
 
-    if (e.type === 'mousedown' && e.button === 0) {
-      xDown = e.nativeEvent.x;
-      yDown = e.nativeEvent.y;
-    }
-    if (e.type === 'mouseup' && e.button === 0) {
-      xUp = e.nativeEvent.x;
-      yUp = e.nativeEvent.y;
-
-      if (xDown === xUp && yDown === yUp) {
-        setIsHidden(!isHidden);
-      }
-    }
-  })();
+  const handleEvent = (event) => {
+    if (isSameMouse(event)) setIsHidden(!isHidden);
+  };
 
   return (
-    <Grid
-      container
-      direction="row"
-      justify="flex-start"
-      alignItems="flex-start"
-    >
+    <div style={styles.gridRow}>
+
       <Button onClick={() => updateStatus(note)} tooltip="change status">
         <IconStatus color={status ? 'green' : 'black'} />
       </Button>
@@ -56,6 +44,6 @@ export default ({ note, setEditId }) => {
         <IconRemove />
       </Button>
 
-    </Grid>
+    </div>
   )
 }

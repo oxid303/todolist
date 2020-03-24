@@ -1,6 +1,5 @@
 import React from 'react';
 import { Field } from 'react-final-form';
-import { Grid } from '@material-ui/core';
 import Button from '../../button';
 import TextField from '../textfield';
 import {
@@ -27,12 +26,7 @@ export default ({
   const placeholder = isEdit ? 'what changed?' : 'what\'s new?';
 
   return (
-    <Grid
-      container
-      direction="row"
-      justify="flex-start"
-      alignItems="flex-start">
-
+    <>
       {!isEdit &&
         <Button
           disabled={pristine}
@@ -87,6 +81,6 @@ export default ({
           <Button disabled><IconRemove color="grey" /></Button>
         </span>
       }
-    </Grid>
+    </>
   )
 }

@@ -1,25 +1,23 @@
+const getRandomColor = (light) => {
+  return `hsl(${Math.random() * 360}, 40%, ${light}%)`;
+};
+
 export default {
   wrapper: {
     minHeight: '100vh',
     minWidth: 758,
-    backgroundImage: 'linear-gradient(to bottom right, #f6f9fa, #e0f2f1)',
-    // backgroundImage: 'linear-gradient(to bottom right, #e0e9f2, #e0f2f1)',
-    // backgroundImage: 'linear-gradient(to bottom right, #e0f2f1, #e0e9f2)',
-    marginLeft: 'calc(100vw - 100%)',
-    marginRight: 0,
+    backgroundImage: `linear-gradient(to bottom right,
+      ${getRandomColor(98)}, ${getRandomColor(96)})`,
+    paddingLeft: 'calc(100vw - 100%)',
+    paddingRight: 0,
   },
   wrapperGrid: {
-    padding: '20px 0',
-    minWidth: 718,
     display: 'grid',
     justifyItems: 'center',
+    padding: '20px 0',
+    minWidth: 718,
   },
-  grid92: {
-    display: 'grid',
-    justifyItems: 'left',
-    gridAutoRows: 'minmax(92px, auto)',
-  },
-  wrapperFormAndCalendar: {
+  gridFormAndCalendar: {
     display: 'grid',
     gridTemplateColumns: 'auto auto',
     backgroundColor: '#fff',
@@ -44,9 +42,10 @@ export default {
     marginLeft: 75,
     width: 440,
   },
-  grid52: {
+  gridRow: {
     display: 'grid',
-    gridAutoRows: 'minmax(52px, auto)',
+    gridTemplateColumns: 'repeat(4, auto)',
+    alignItems: 'start',
   },
   textFieldInput: {
     fontSize: 20,
@@ -59,12 +58,21 @@ export default {
     fontSize: 8,
   },
 
-  buildTextField: (isEdit) => ({
+  buildVerticalGridItems: (min = 'auto', max = 'auto') => {
+    if (min !== 'auto') min += 'px';
+    if (max !== 'auto') max += 'px';
+    return {
+      display: 'grid',
+      gridAutoRows: `minmax(${min}, ${max})`,
+    }
+  },
+
+  buildTextField: isEdit => ({
     width: isEdit ? 380 : 444,
     padding: '0 10px',
   }),
 
-  buildPaddingTop: (paddingTop) => ({
+  buildPaddingTop: paddingTop => ({
     paddingTop: paddingTop,
   }),
 
@@ -109,7 +117,7 @@ export default {
   hiddenOverflow: () => document.body.style.overflow = 'hidden',
   autoOverflow: () => document.body.style.overflow = 'auto',
 
-  buildModal: (isShow) => ({
+  buildModal: isShow => ({
     display: isShow ? 'block' : 'none',
     position: 'fixed',
     zIndex: 1,
@@ -117,13 +125,6 @@ export default {
     top: 0,
     width: '100%',
     height: '100%',
-    // backgroundColor: '#ffffff00', /* Fallback color */
-    backgroundColor: '#aaaaaabb', /* Black w/ opacity */
+    backgroundColor: '#aaaaaabb',
   }),
-
-  // buildColorSVG: ({ disabled, status }) => {
-  //   return status ?
-  //     (disabled ? 'darkgreen' : 'green') :
-  //     (disabled ? 'grey' : 'black');
-  // },
 };
