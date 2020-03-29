@@ -1,4 +1,4 @@
-const getRandomColor = (light) => {
+const getRandomColor = (light = 95) => {
   return `hsl(${Math.random() * 360}, 40%, ${light}%)`;
 };
 
@@ -14,7 +14,7 @@ export default {
   wrapperGrid: {
     display: 'grid',
     justifyItems: 'center',
-    padding: '20px 0',
+    padding: '20px 0 75px 0',
     minWidth: 718,
   },
   gridFormAndCalendar: {
@@ -56,6 +56,24 @@ export default {
   },
   textFieldHelperText: {
     fontSize: 8,
+  },
+  displayNone: {
+    display: 'none',
+  },
+  storageWrapper: {
+    position: 'fixed',
+    bottom: 10,
+    left: 'calc(100vw - 370px)',
+    width: 320,
+    boxShadow: '1px 1px 15px #5e5e5ee0',
+  },
+  storage: {
+    padding: 10,
+    backgroundColor: '#cccccc',
+    display: 'grid',
+    width: 300,
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    justifyItems: 'center',
   },
 
   buildVerticalGridItems: (min = 'auto', max = 'auto') => {

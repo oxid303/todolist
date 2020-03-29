@@ -3,6 +3,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import NotesContext from '../contexts/notes';
 import Form from '../form';
 import List from '../list';
+import Storage from '../storage';
 import Calendar from '../calendar';
 
 import localStorageNotes from '../../utils/local-storage-notes';
@@ -17,16 +18,19 @@ export default ({ date }) => {
 
   const [notes, setNotes] = React.useState(localStorageNotes.get());
 
-  const currNotes = notes[date] || [];
+  const setModifiedNotes = notes => {
+    localStorageNotes.set(notes);
+    setNotes(notes);
+  };
 
-  const setCurrNotes = (currNotes) => {
+  const setCurrNotes = currNotes => {
     const modifiedNotes = addToNewObj(notes, date, currNotes);
-
-    localStorageNotes.set(modifiedNotes);
-    setNotes(modifiedNotes);
+    setModifiedNotes(modifiedNotes);
   };
 
   const dates = getObjKeysNames(notes);
+
+  const currNotes = notes[date] || [];
 
   const append = ({ text }) => {
     currNotes.push({
@@ -64,13 +68,16 @@ export default ({ date }) => {
   return (
     <MuiThemeProvider theme={muiTheme}>
       <NotesContext.Provider value={{
+        notes,
         currNotes,
         setCurrNotes,
+        setModifiedNotes,
+        date,
+        dates,
         append,
         update,
         updateStatus,
         remove,
-        dates,
       }}>
         <div style={styles.wrapper}>
           <div style={styles.wrapperGrid}>
@@ -85,6 +92,10 @@ export default ({ date }) => {
                 <div style={styles.wrapperList}><List /></div>}
 
             </div>
+          </div>
+
+          <div style={styles.storageWrapper}>
+            <Storage />
           </div>
         </div>
       </NotesContext.Provider>

@@ -15,12 +15,14 @@ export default ({
   onClick,
   disabled = false,
   tooltip,
+  component = 'button',
 }) => {
   return (
     <MuiTooltip tooltip={tooltip} disabled={disabled}>
 
       <Button
         variant="contained"
+        component={component}
         color={color}
         type={type}
         onClick={onClick}

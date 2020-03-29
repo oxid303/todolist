@@ -13,7 +13,7 @@ export default withRouter(({ location }) => {
 
   const [date, setDate] = React.useState(dayToString(day));
 
-  const urlDate = location.pathname.substring(1);
+  const urlDate = location.search.substring(1);
 
   if (urlDate !== date && isValidUrlDate(urlDate)) {
     const changedDay = new Date(urlDate);
@@ -21,10 +21,10 @@ export default withRouter(({ location }) => {
 
     setDay(changedDay);
     setDate(changedDate);
-    return <Redirect to={`/${changedDate}`} />
+    return <Redirect to={`/todolist?${changedDate}`} />
 
   } else if (urlDate !== date) {
-    return <Redirect to={`/${date}`} />
+    return <Redirect to={`/todolist?${date}`} />
   }
 
   return (
@@ -32,7 +32,10 @@ export default withRouter(({ location }) => {
       day,
       setDay,
     }}>
-      <Route path={`/${date}`} render={() => <UI date={date} />} />
+      <Route to={{
+        pathname: "/todolist",
+        search: `${date}`,
+      }} render={() => <UI date={date} />} />
     </DayContext.Provider>
   )
 })

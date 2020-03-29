@@ -32,11 +32,11 @@ export default withRouter(({ history }) => {
   const handleFocusBlur = onFocusBlur(onBlurCallback);
 
   const handleDayClick = (changedDay, modifiers, dayPickerInput) => {
-    const dayString = dayToString(changedDay);
+    const changedUrl = `/todolist?${dayToString(changedDay)}`;
     setDay(changedDay);
 
     setTimeout(() => {
-      history.push(dayString);
+      history.push(changedUrl);
       setMonth(changedDay);
       setIsShow(false);
     }, 50);
