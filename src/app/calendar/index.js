@@ -14,9 +14,9 @@ import styles from '../../styles';
 import './stylesDayPicker.css';
 
 
-export default withRouter(({ history }) => {
+export default () => {
 
-  const { day, setDay } = React.useContext(DaysContext);
+  const { day, setDay, pushDayToUrl } = React.useContext(DaysContext);
   const { dates } = React.useContext(NotesContext);
 
   const [month, setMonth] = React.useState(day);
@@ -32,11 +32,10 @@ export default withRouter(({ history }) => {
   const handleFocusBlur = onFocusBlur(onBlurCallback);
 
   const handleDayClick = (changedDay, modifiers, dayPickerInput) => {
-    const changedUrl = `/todolist?${dayToString(changedDay)}`;
     setDay(changedDay);
 
     setTimeout(() => {
-      history.push(changedUrl);
+      pushDayToUrl(changedDay);
       setMonth(changedDay);
       setIsShow(false);
     }, 50);
@@ -92,4 +91,4 @@ export default withRouter(({ history }) => {
       </div>
     </div>
   )
-})
+}
