@@ -3,8 +3,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import NotesContext from '../contexts/notes';
 import Form from '../form';
 import List from '../list';
-import Storage from '../storage';
-import Calendar from '../calendar';
+import Options from '../options';
 
 import localStorageNotes from '../../utils/local-storage-notes';
 import getObjKeysNames from '../../utils/get-obj-keys-names';
@@ -12,6 +11,7 @@ import addToNewObj from '../../utils/add-to-new-obj';
 import nextIdInArrayObjects from '../../utils/next-id-in-array-objects';
 import muiTheme from '../../styles/mui-theme';
 import styles from '../../styles';
+import moduleStyles from './styles.module.css';
 
 
 export default ({ date }) => {
@@ -70,7 +70,6 @@ export default ({ date }) => {
       <NotesContext.Provider value={{
         notes,
         currNotes,
-        setCurrNotes,
         setModifiedNotes,
         date,
         dates,
@@ -80,22 +79,20 @@ export default ({ date }) => {
         remove,
       }}>
         <div style={styles.wrapper}>
-          <div style={styles.wrapperGrid}>
-            <div style={styles.buildVerticalGridItems(92)}>
+          <div className={moduleStyles.container}>
 
-              <div style={styles.gridFormAndCalendar}>
-                <Form />
-                <Calendar />
-              </div>
+            <div className={moduleStyles.leftOffset}></div>
+
+            <div style={styles.wrapperNotes}>
+
+              <div style={styles.wrapperForm}><Form /></div>
 
               {currNotes.length !== 0 &&
                 <div style={styles.wrapperList}><List /></div>}
 
             </div>
-          </div>
 
-          <div style={styles.storageWrapper}>
-            <Storage />
+            <Options />
           </div>
         </div>
       </NotesContext.Provider>

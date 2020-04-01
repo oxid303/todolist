@@ -62,7 +62,7 @@ export default ({
           type="submit"
           tooltip="add note"
           disabled={pristine}
-        ><IconAppend /></Button>}
+        ><IconAppend color={pristine ? 'grey' : 'black'} /></Button>}
 
       {isEdit &&
         <span>

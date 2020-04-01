@@ -9,35 +9,41 @@ import isValidUrlDate from '../utils/is-valid-url-date';
 
 export default withRouter(({ history, location }) => {
 
-  const [day, setDay] = React.useState(new Date());
-
+  const [day, setDay] = React.useState(new Date(
+    new Date().setHours(0, 0, 0, 0)
+  ));
   const [date, setDate] = React.useState(dayToString(day));
 
+  const baseUrl = '/todolist/';
   const urlDate = location.search.substring(1);
 
-  const baseUrl = '/todolist/';
-
   const pushDayToUrl = day => {
-    const changedUrl = `${baseUrl}?${dayToString(day)}`;
-    history.push(changedUrl);
+    const changedDate = dayToString(day);
+
+    if (changedDate !== urlDate) {
+      const changedUrl = `${baseUrl}?${changedDate}`;
+      history.push(changedUrl);
+    }
   };
 
-  if (urlDate !== date && isValidUrlDate(urlDate)) {
-    const changedDay = new Date(urlDate);
-    const changedDate = dayToString(changedDay);
+  if (urlDate !== date) {
 
-    setDay(changedDay);
-    setDate(changedDate);
-    return <Redirect to={`${baseUrl}?${changedDate}`} />
+    if (isValidUrlDate(urlDate)) {
+      const changedDay = new Date(urlDate);
+      const changedDate = dayToString(changedDay);
 
-  } else if (urlDate !== date) {
-    return <Redirect to={`${baseUrl}?${date}`} />
+      setDay(changedDay);
+      setDate(changedDate);
+      return <Redirect to={`${baseUrl}?${changedDate}`} />
+
+    } else {
+      return <Redirect to={`${baseUrl}?${date}`} />
+    }
   }
 
   return (
     <DayContext.Provider value={{
       day,
-      setDay,
       pushDayToUrl,
     }}>
       <Route to={{

@@ -5,21 +5,23 @@ const getRandomColor = (light = 95) => {
 export default {
   wrapper: {
     minHeight: '100vh',
-    minWidth: 758,
+    paddingLeft: '18px',
+    paddingRight: 'calc(100% - 100vw + 18px)',
     backgroundImage: `linear-gradient(to bottom right,
       ${getRandomColor(98)}, ${getRandomColor(96)})`,
-    paddingLeft: 'calc(100vw - 100%)',
-    paddingRight: 0,
   },
-  wrapperGrid: {
+  container: {
     display: 'grid',
+    gridTemplateColumns: 'auto auto auto',
     justifyItems: 'center',
-    padding: '20px 0 75px 0',
-    minWidth: 718,
+    gridGap: 20,
   },
-  gridFormAndCalendar: {
-    display: 'grid',
-    gridTemplateColumns: 'auto auto',
+  wrapperNotes: {
+    width: 718,
+    padding: '20px 0',
+  },
+  wrapperForm: {
+    height: 57,
     backgroundColor: '#fff',
     padding: '25px 30px 0 30px',
     borderRadius: 5,
@@ -57,23 +59,39 @@ export default {
   textFieldHelperText: {
     fontSize: 8,
   },
+  wrapperOptions: {
+    width: 274,
+    padding: '20px 20px 20px 0',
+  },
+  topOffset: {
+    height: 26,
+  },
+  containerOptions: {
+    position: 'sticky',
+    top: 20,
+  },
+  wrapperMenu: {
+    backgroundColor: '#fff',
+    borderColor: '#bbb',
+    borderStyle: 'none solid solid solid',
+    borderWidth: 1,
+    borderRadius: '0 0 5px 5px',
+    boxShadow: '1px 1px 5px #9e9e9ee0',
+  },
+  textBold: {
+    fontWeight: 'bold',
+  },
   displayNone: {
     display: 'none',
   },
-  storageWrapper: {
-    position: 'fixed',
-    bottom: 10,
-    left: 'calc(100vw - 370px)',
-    width: 320,
-    boxShadow: '1px 1px 15px #5e5e5ee0',
-  },
-  storage: {
-    padding: 10,
-    backgroundColor: '#cccccc',
-    display: 'grid',
-    width: 300,
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    justifyItems: 'center',
+  wrapperCalendar: {
+    marginTop: 20,
+    width: 272,
+    height: 320,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    border: '1px solid #bbb',
+    boxShadow: '1px 1px 5px #9e9e9ee0',
   },
 
   buildVerticalGridItems: (min = 'auto', max = 'auto') => {
@@ -120,29 +138,6 @@ export default {
       },
   ),
 
-  buildCalendar: isShow => ({
-    display: isShow ? 'block' : 'none',
-    position: 'absolute',
-    zIndex: 1,
-    top: 95,
-    left: 'calc(((100vw - 100%) / 2) + 50% + 50px)',
-    backgroundImage: 'linear-gradient(to bottom, #fff 70%, #d2e9f5)',
-    border: 'solid 1px grey',
-    borderRadius: 5,
-    boxShadow: '3px 3px 7px grey',
-  }),
-
   hiddenOverflow: () => document.body.style.overflow = 'hidden',
   autoOverflow: () => document.body.style.overflow = 'auto',
-
-  buildModal: isShow => ({
-    display: isShow ? 'block' : 'none',
-    position: 'fixed',
-    zIndex: 1,
-    left: 0,
-    top: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#aaaaaabb',
-  }),
 };

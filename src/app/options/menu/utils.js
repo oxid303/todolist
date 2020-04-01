@@ -1,16 +1,5 @@
-import React from 'react';
 import _ from 'lodash';
-import NotesContext from '../contexts/notes';
-import Button from '../button';
-
-import addToNewObj from '../../utils/add-to-new-obj';
-import styles from '../../styles';
-import {
-  IconUpload,
-  IconDownload,
-  IconClearToday,
-  IconClearAll,
-} from '../../assets/icons';
+import addToNewObj from '../../../utils/add-to-new-obj';
 
 const isValidJSON = text => {
   try {
@@ -21,11 +10,11 @@ const isValidJSON = text => {
   return true;
 };
 
-export default () => {
+export default (
+  notes, date, setModifiedNotes, isTodayFinished, isAllFinished
+) => ({
 
-  const { notes, date, setModifiedNotes } = React.useContext(NotesContext);
-
-  const confirmUpload = (e) => {
+  confirmUpload: e => {
     if (!_.isEmpty(notes)) {
       const isConfirm = window.confirm(
         `
@@ -35,9 +24,9 @@ export default () => {
       );
       if (!isConfirm) e.preventDefault();
     }
-  };
+  },
 
-  const upload = (e) => {
+  upload: e => {
 
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -61,9 +50,9 @@ export default () => {
     };
     reader.readAsText(file);
     document.getElementById('contained-button-file').value = '';
-  };
+  },
 
-  const download = () => {
+  download: () => {
     if (_.isEmpty(notes)) {
       alert('There is nothing to save ...yet :)');
       return;
@@ -77,9 +66,27 @@ export default () => {
     element.download = `notes-${Date.now()}.json`;
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
-  };
+  },
 
-  const clearTodayNotes = () => {
+  toggleStatusToday: () => {
+    const status = !isTodayFinished;
+
+    const currNotes = notes[date].map(note => ({ ...note, status }));
+    const modifiedNotes = addToNewObj(notes, date, currNotes);
+    setModifiedNotes(modifiedNotes);
+  },
+
+  toggleStatusAll: () => {
+    const status = !isAllFinished;
+    const modifiedNotes = {};
+
+    for (const date in notes) {
+      modifiedNotes[date] = notes[date].map(note => ({ ...note, status }));
+    }
+    setModifiedNotes(modifiedNotes);
+  },
+
+  removeTodayNotes: () => {
     if (!notes[date]) {
       alert('Nothing to delete');
       return;
@@ -89,9 +96,9 @@ export default () => {
       const modifiedNotes = addToNewObj(notes, date, undefined);
       setModifiedNotes(modifiedNotes);
     }
-  };
+  },
 
-  const clearAllNotes = () => {
+  removeAllNotes: () => {
     if (_.isEmpty(notes)) {
       alert('Nothing to delete');
       return;
@@ -100,41 +107,5 @@ export default () => {
     if (isConfirm) {
       setModifiedNotes({});
     };
-  };
-
-  return (
-    <div style={styles.storage}>
-      <input
-        type="file"
-        id="contained-button-file"
-        accept="application/JSON"
-        onChange={upload}
-        style={styles.displayNone}
-      />
-      <label htmlFor="contained-button-file">
-        <Button
-          component="span"
-          onClick={confirmUpload}
-          tooltip="upload notes"
-        ><IconUpload /></Button>
-      </label>
-
-      <Button
-        onClick={download}
-        tooltip="download notes"
-      ><IconDownload /></Button>
-
-      <Button
-        color="secondary"
-        onClick={clearTodayNotes}
-        tooltip="delete today's notes"
-      ><IconClearToday /></Button>
-
-      <Button
-        color="secondary"
-        onClick={clearAllNotes}
-        tooltip="delete all notes !!!"
-      ><IconClearAll /></Button>
-    </div>
-  );
-}
+  },
+});

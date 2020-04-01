@@ -2,25 +2,35 @@ import React from 'react';
 import { Form } from 'react-final-form';
 import noop from 'lodash/noop';
 import NotesContext from '../contexts/notes';
-import Layout from './layout';
+import Layout from './form-layout';
 
 import cutSpaces from '../../utils/cut-spaces';
+import notesToStrings from '../../utils/notes-to-strings';
 import {
   composeValidators,
   required,
   minLength,
-  maxLength
+  maxLength,
+  isUniqueString
 } from '../../utils/validators';
 
 
 export default ({ note = {}, isEdit = false, unmount = noop }) => {
 
-  const { append, update } = React.useContext(NotesContext);
+  const { append, update, currNotes } = React.useContext(NotesContext);
 
   const minLength5 = minLength(5);
   const maxLength250 = maxLength(250);
 
-  const validators = composeValidators(required, minLength5, maxLength250);
+  const currNotesStrings = notesToStrings(currNotes);
+  const isUniqueStringOnToday = isUniqueString(currNotesStrings);
+
+  const validators = composeValidators(
+    required,
+    minLength5,
+    maxLength250,
+    isUniqueStringOnToday
+  );
 
   const statusColor = note.status ? 'darkgreen' : 'grey';
   const text = 'text';
